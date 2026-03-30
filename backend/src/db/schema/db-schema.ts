@@ -1,4 +1,4 @@
-import { pool } from "./db-config";
+import { pool } from "../config/db-config";
 
 export async function DB_schema() {
 
@@ -21,7 +21,7 @@ export async function DB_schema() {
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
-      users_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT AUTO_INCREMENT PRIMARY KEY,
       role INT,
       document_id INT,
       password VARCHAR(255) NOT NULL,
@@ -75,7 +75,7 @@ export async function DB_schema() {
       entity_id INT,
       description VARCHAR(255),
       user_id INT,
-      FOREIGN KEY (user_id) REFERENCES users(users_id)
+      FOREIGN KEY (user_id) REFERENCES users(user_id)
     )
   `);
 
