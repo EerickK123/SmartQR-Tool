@@ -3,7 +3,7 @@
 SmartQR Tool is a QR code generation system designed to improve product traceability by embedding structured product and batch information into QR codes.
 
 ## Project Status
-Design phase
+Developmnent phase
 
 ## Main Features
 - QR generation with product and lot information
