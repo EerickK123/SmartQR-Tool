@@ -1,16 +1,16 @@
 import { Router } from "express";
 import loginRoutes from "../features/login/login.route";
 import usersManagerRoutes from "../features/users_manager/users_manager.route";
-//import logoutRoutes from "../features/logout/logout.route";
-import { authMiddleware } from "../auth/auth.middleware";
+import { authMiddleware } from "../global/middlewares/auth/auth.middleware";
+import {roleRequiredMiddleware} from "../global/middlewares/roleRequired/roleRequired.Middleware";
 
 
 
 const router = Router();
 
 router.use("/auth", loginRoutes);
-router.use("/actions", authMiddleware(2) ,usersManagerRoutes);
-router.use("/logout", authMiddleware(1));
+router.use("/users", authMiddleware(), roleRequiredMiddleware(2), usersManagerRoutes);
+router.use("/logout", authMiddleware() );
 
 export default router;
     

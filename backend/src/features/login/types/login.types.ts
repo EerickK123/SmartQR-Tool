@@ -1,20 +1,13 @@
 import { RowDataPacket } from "mysql2";
 
 export interface loginRequestDTO {
-    document: number;
-    password: string;
+  document: number;
+  password: string;
 }
-
-export interface loginResponseDTO {
-    success: boolean;
-    result: Record<string, any>;
-    message: string | null;
-}
-
 
 export interface UserRow extends RowDataPacket {
-  users_id: number;
-  role: number;
+  user_id: number;
+  role: string;
   document_id: number;
   password: string;
   user_name: string;
