@@ -1,18 +1,10 @@
 import express from "express";
 import cors from "cors";
-import { DB_schema } from "./db/schema/db-schema"; // modificar para que tenga un usuario root cuando se cree la db
+import { DB_schema } from "./db/schema/db-schema";
 import router from "./router";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: any;
-    }
-  }
-}
 
-
-const app = async (port?: number) => {
+export const app = async (port?: number) => {
   const App = express();
   App.use(cors());
   App.use(express.json());
@@ -31,4 +23,3 @@ const app = async (port?: number) => {
 
   return App;
 };
-export default app;

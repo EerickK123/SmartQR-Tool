@@ -1,7 +1,6 @@
 import { pool } from "../config/db-config";
-
+import bcrypt from "bcrypt";
 export async function DB_schema() {
-
   await pool.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\``);
   await pool.query(`USE \`${process.env.DB_NAME}\``);
 
@@ -20,17 +19,17 @@ export async function DB_schema() {
   `);
 
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      user_id INT AUTO_INCREMENT PRIMARY KEY,
-      role INT,
-      document_id INT,
-      password VARCHAR(255) NOT NULL,
-      user_name VARCHAR(100) NOT NULL,
-      status INT,
-      FOREIGN KEY (role) REFERENCES roles(role_id),
-      FOREIGN KEY (status) REFERENCES status(status_id)
-    )
-  `);
+  CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    role INT,
+    document_id BIGINT UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    user_name VARCHAR(100) NOT NULL,
+    status INT,
+    FOREIGN KEY (role) REFERENCES roles(role_id),
+    FOREIGN KEY (status) REFERENCES status(status_id)
+  )
+`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS products (
@@ -79,5 +78,32 @@ export async function DB_schema() {
     )
   `);
 
-  
+
+  await pool.query(`
+    INSERT IGNORE INTO roles (role_id, role_description)
+    VALUES (1, 'user'), (2, 'supervisor'), (3, 'admin')
+  `);
+
+
+  await pool.query(`
+    INSERT IGNORE INTO status (status_id, status_description)
+    VALUES (1, 'active'), (2, 'inactive')
+  `);
+
+
+  const [rows]: any = await pool.query(
+    `SELECT user_id FROM users WHERE document_id = ? LIMIT 1`,
+    [1234567890],
+  );
+
+  if (rows.length === 0) {
+    const hashedPassword = await bcrypt.hash("1234567890", 10);
+
+    await pool.query(
+      `INSERT INTO users (role, document_id, password, user_name, status)
+       VALUES (?, ?, ?, ?, ?)`,
+      [3, 1234567890, hashedPassword, "root", 1],
+    );
+
+  }
 }
